@@ -1,3 +1,4 @@
+using OrderApi.Entpoints.Categories;
 using OrderApi.Infra.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Database:SqlServer"]);
 
 var app = builder.Build();
+
+
+
+//Escondendo a logica do endpoint (cada arquivo sera responsavel por apenas 1 rota)
+app.MapMethods(CategoryPost.Template, CategoryPost.Methods, CategoryPost.Handle);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
