@@ -1,3 +1,13 @@
+#Em .net sempre adicionar um gitignore e adicionar o .vs (esse .vs é do visual studio e fica dando problema no git)
 .vs
 appsettings.json
 appsettings.Development.json
+
+#Removendo o appsettings do projeto no github
+#1º -> crie a pasta gitignore
+#2º -> adicione o arquivo appsettings.json/#appsettings.Development.json
+#appsettings.Development
+#appsettings.Development.json
+#3º -> execute esse comando: git rm --cached appsettings.json --- git rm --cached appsettings.Development.json 
+#4º -> comite as alterações
+#5º -> de um push
