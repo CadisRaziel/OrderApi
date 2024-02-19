@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 
 //Conexão com banco de dados
-builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Database:SqlServer"]);
+builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["ConnectionStrings:OrderApiDb"]);
 
 var app = builder.Build();
 
