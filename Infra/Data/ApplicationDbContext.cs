@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Flunt.Notifications;
+using Microsoft.EntityFrameworkCore;
 using OrderApi.Domain.Products;
 
 namespace OrderApi.Infra.Data
@@ -15,7 +16,10 @@ namespace OrderApi.Infra.Data
         {
             //Abaixo colocamos todas as strings como 100 caracteres porém aqui eu digo(respeite esses valores acima da função debaixo), ou seja essa função tem mais prioridade
             modelBuilder.Entity<Product>().Property(p => p.Name).IsRequired();
-            modelBuilder.Entity<Product>().Property(p => p.Description).HasMaxLength(255);
+            modelBuilder.Entity<Product>().Property(p => p.Description).HasMaxLength(255);  
+            
+
+            modelBuilder.Ignore<Notification>(); //-> Ignorando a classe de notificação do flunt para parar de dar erro de chave primaria
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
