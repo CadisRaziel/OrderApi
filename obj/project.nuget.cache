@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "W0eRdMs7DTYFIZ3PU2Vc+HFPyGWYNbfznTxrFgEXvSEMQR4lJqWBOmgjLyGy5cJUsT/nMl0TpT0xI604nRIEfQ==",
+  "dgSpecHash": "tr/hliMyMv6+Q/5A+7CE8kr4xNjciVJerLVB4yQfdRzphSWJXQds6+fMyyUGusi3xD+5xgPnL7gox/5zSZBqig==",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\Documents\\aprendendo_csharp\\OrderApi\\OrderApi.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\flunt\\2.0.5\\flunt.2.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
@@ -53,12 +54,5 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.text.encoding.codepages\\4.7.0\\system.text.encoding.codepages.4.7.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problema ao ler o arquivo de cache C:\\Users\\Lenovo\\Documents\\aprendendo_csharp\\OrderApi\\obj\\project.nuget.cache: Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }
