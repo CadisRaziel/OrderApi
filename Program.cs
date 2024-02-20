@@ -20,6 +20,8 @@ var app = builder.Build();
 
 //Escondendo a logica do endpoint (cada arquivo sera responsavel por apenas 1 rota)
 app.MapMethods(CategoryPost.Template, CategoryPost.Methods, CategoryPost.Handle);
+app.MapMethods(CategoryGetAll.Template, CategoryGetAll.Methods, CategoryGetAll.Handle);
+app.MapMethods(CategoryPut.Template, CategoryPut.Methods, CategoryPut.Handle);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

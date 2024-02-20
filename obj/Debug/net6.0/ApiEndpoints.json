@@ -1,0 +1,67 @@
+[
+  {
+    "ContainingType": "OrderApi.Entpoints.Categories.CategoryPost",
+    "Method": "Action",
+    "RelativePath": "api/v1/categories",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "CategoryRequest",
+        "Type": "OrderApi.Entpoints.Categories.CategoryRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OrderApi.Entpoints.Categories.CategoryGetAll",
+    "Method": "Action",
+    "RelativePath": "api/v1/getCategories",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OrderApi.Entpoints.Categories.CategoryPut",
+    "Method": "Action",
+    "RelativePath": "api/v1/PutCategories/{id}",
+    "HttpMethod": "PUT",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "CategoryRequest",
+        "Type": "OrderApi.Entpoints.Categories.CategoryRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
