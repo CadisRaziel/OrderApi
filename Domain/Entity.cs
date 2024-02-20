@@ -1,7 +1,10 @@
-﻿namespace OrderApi.Domain
+﻿using Flunt.Notifications;
+
+namespace OrderApi.Domain
 {
-    public abstract class Entity
+    public abstract class Entity : Notifiable<Notification> //Utilizando o flunt nós iremos trabalhar com notificação, ou seja essa classe vai enviar mensagens para outra classe pra realizar as validações
     {
+         
         public Entity()
         {
             //Toda vez que eu instanciar tanto category quanto product eu ja vou ter o id pronto!! 

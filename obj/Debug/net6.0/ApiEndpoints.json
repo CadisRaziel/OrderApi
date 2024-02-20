@@ -40,7 +40,7 @@
   {
     "ContainingType": "OrderApi.Entpoints.Categories.CategoryPut",
     "Method": "Action",
-    "RelativePath": "api/v1/PutCategories/{id}",
+    "RelativePath": "api/v1/PutCategories/{id:guid}",
     "HttpMethod": "PUT",
     "IsController": false,
     "Order": 0,
