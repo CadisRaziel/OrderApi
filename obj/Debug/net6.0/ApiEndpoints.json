@@ -22,6 +22,55 @@
     ]
   },
   {
+    "ContainingType": "OrderApi.Endpoints.Employees.EmployeePost",
+    "Method": "Action",
+    "RelativePath": "api/v1/employees",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "EmployeeRequest",
+        "Type": "OrderApi.Endpoints.Employees.EmployeeRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OrderApi.Endpoints.Employees.EmployeeGetAll",
+    "Method": "Action",
+    "RelativePath": "api/v1/employeesGetAll",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "rows",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "OrderApi.Entpoints.Categories.CategoryGetAll",
     "Method": "Action",
     "RelativePath": "api/v1/getCategories",

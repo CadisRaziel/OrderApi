@@ -1,11 +1,22 @@
 ﻿using Flunt.Notifications;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OrderApi.Domain.Products;
 
 namespace OrderApi.Infra.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser> //-> Iremos utilizar o IdentityUser para autenticação (repare que ele é nativo e é uma combinação com o DbContext pois ele precisa ir nas tabelas do db
     {
+        /*
+         IdentityDbContext<IdentityUser> -> adicionado isso ganhamos o seguinte
+            - Gerenciamento de usuario
+            - Gerenciamento de atributos (claims)
+            - Gerenciamento de password/usuario(login)
+            - Gerenciamento de roles
+            - Gerenciamento de autenticação
+            - Gerenciamento de autorização
+         */
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -14,6 +25,9 @@ namespace OrderApi.Infra.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Configurando o Identity para nao der erro de primareKey na hora de gera migration
+            base.OnModelCreating(modelBuilder); //base. -> estou chamando o OnModelCreating da classe pai que é o IdentityDbContext
+
             //Abaixo colocamos todas as strings como 100 caracteres porém aqui eu digo(respeite esses valores acima da função debaixo), ou seja essa função tem mais prioridade
             modelBuilder.Entity<Product>().Property(p => p.Name).IsRequired();
             modelBuilder.Entity<Product>().Property(p => p.Description).HasMaxLength(255);  
