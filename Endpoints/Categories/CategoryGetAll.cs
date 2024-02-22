@@ -1,4 +1,5 @@
-﻿using OrderApi.Domain.Products;
+﻿using Microsoft.AspNetCore.Authorization;
+using OrderApi.Domain.Products;
 using OrderApi.Infra.Data;
 
 namespace OrderApi.Entpoints.Categories
@@ -9,6 +10,8 @@ namespace OrderApi.Entpoints.Categories
         public static string Template => "api/v1/getCategories";
         public static string[] Methods => new string[] { HttpMethod.Get.ToString() };
         public static Delegate Handle => Action;
+
+        [Authorize]
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
         public static IResult Action(ApplicationDbContext context)

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OrderApi.Domain.Products;
 using OrderApi.Infra.Data;
 using OrderApi.Utils.ErrosEndpoint;
+using static System.Net.WebRequestMethods;
+using System.Security.Claims;
 
 namespace OrderApi.Entpoints.Categories
 {
@@ -12,9 +15,14 @@ namespace OrderApi.Entpoints.Categories
         public static string[] Methods => new string[] { HttpMethod.Put.ToString() };
         public static Delegate Handle => Action;
 
+        [Authorize]
+
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action([FromRoute]Guid id, CategoryRequest categoryRequest, ApplicationDbContext context)
+        public static IResult Action([FromRoute]Guid id, HttpContext http ,CategoryRequest categoryRequest, ApplicationDbContext context)
         {
+
+            //Por causa da Policy aqui eu ja sei que o usuario esta autenticado !!
+            var userId = http.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value; //-> pegando o id do usuario logado
             var category = context.Categories.Where(c => c.Id == id).FirstOrDefault();
 
             if(category == null)
@@ -22,7 +30,7 @@ namespace OrderApi.Entpoints.Categories
                 return Results.NotFound();
             }
 
-            category.EditInfo(categoryRequest.Name, categoryRequest.Active);
+            category.EditInfo(categoryRequest.Name, categoryRequest.Active, userId);
 
             if(!category.IsValid)
             {
