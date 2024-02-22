@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using OrderApi.Endpoints.Employees;
+using OrderApi.Endpoints.Security;
 using OrderApi.Entpoints.Categories;
 using OrderApi.Infra.Data;
 using OrderApi.Infra.Service;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +69,61 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
+/*
+ //Authorization de forma automatica (todos os endpoints vao precisar do token ao utilizar isso), com isso tambem não precisamos ficar passando esse código "[Authorize]" em todos os endpoints
+ //Seria meio que uma politica de segurança default
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+      .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+      .RequireAuthenticatedUser()
+      .Build();
+    options.AddPolicy("EmployeePolicy", p =>
+        p.RequireAuthenticatedUser().RequireClaim("EmployeeCode"));
+});
+    
+ */
+
+//Habilitando serviço de autorizaçao (1º passo para habilitar a autorização) (serviço disponivel pro app usar)
+builder.Services.AddAuthorization(options =>
+{
+    //Politica de segurança (diferenciando admin de user normal, como se fosse uma Role)
+    //Para que determinada rota seja acessada ela ira precisar dessa politicade segurança
+    options.AddPolicy("EmployeePolicy", p =>
+        p.RequireAuthenticatedUser()
+        .RequireClaim("EmployeeCode"));// -> aqui eu digo que o usuario precisa ter a claim "EmployeeCode" para acessar essa rota
+
+    //Aqui eu to criando uma politica de segurança para o usuario em especifico pode utilizar (as vezes queremos tem alguem com poder total, ai criamos essas policies utilitarias)
+    //Employee0050Policy -> Aqui apenas o usuario que tiver o EmployeeCode 0050 pode acessar essa rota
+    options.AddPolicy("Employee0050Policy", p =>
+        p.RequireAuthenticatedUser()
+        .RequireClaim("EmployeeCode", "0050"));// -> Alem do claim ele tem que ter o código(valor) 0050
+});
+
+//Informando ao .Net a forma que ele vai se autenticar (2º passo para habilitar a autorização) (serviço disponivel pro app usar)
+builder.Services.AddAuthentication(x =>
+{
+    //Digo que vai se authenticar atraves do jwt
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+}).AddJwtBearer(options => //-> Digo que to trabalhando com jwt
+{
+    //Opções para validação (para saber se aquele token que eu to gerando e o mesmo que to recebendo)
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateActor = true, 
+        ValidateAudience = true, //-> valida a audiencia
+        ValidateIssuer = true, 
+        ValidateLifetime = true, //-> valida ciclo de vida
+        ValidateIssuerSigningKey = true, //-> valida chave de assinatura
+        ClockSkew = TimeSpan.Zero, //-> Quanto tempo vamos aceitar o token expirado, aqui estamos dizendo 0 minutos de tolerancia(se eu nao passar esse código por default ele da 5 minutos de tolerancia a partir do momento que o token expira)
+        ValidIssuer = builder.Configuration["JwtBearerTokenSettings:Issuer"], //-> configuração no appsettings global (Se a assinatura é igual a que eu to esperando, tipo chave publica e privada)
+        ValidAudience = builder.Configuration["JwtBearerTokenSettings:Audience"], //-> configuração no appsettings global (Se a audiencia é igual a que eu to esperando, tipo o dominio)
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtBearerTokenSettings:SecretKey"])) //-> configuração no appsettings global (Se é a mesma secret key que eu to esperando)
+    };
+});
+
 //Injetando dependencia
 //AddScoped -> quando a classe precisar ser instanciada em um metodo, e em quando dura a nossa requisição essa instancia estara na memoria, quando a requisição acabar ela é destruida
 builder.Services.AddScoped<QueryAllUsersWithClaimName>();
@@ -71,6 +131,10 @@ builder.Services.AddScoped<QueryAllUsersWithClaimName>();
 
 var app = builder.Build();
 
+//Adicionando o middleware de autenticação (3º passo para habilitar a autorização) (habilitando pro app usar)
+//Sempre utilizar nessa ordem
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 //Escondendo a logica do endpoint (cada arquivo sera responsavel por apenas 1 rota)
@@ -79,6 +143,7 @@ app.MapMethods(CategoryGetAll.Template, CategoryGetAll.Methods, CategoryGetAll.H
 app.MapMethods(CategoryPut.Template, CategoryPut.Methods, CategoryPut.Handle);
 app.MapMethods(EmployeePost.Template, EmployeePost.Methods, EmployeePost.Handle);
 app.MapMethods(EmployeeGetAll.Template, EmployeeGetAll.Methods, EmployeeGetAll.Handle);
+app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

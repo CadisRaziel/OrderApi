@@ -1,6 +1,8 @@
-﻿using OrderApi.Domain.Products;
+﻿using Microsoft.AspNetCore.Authorization;
+using OrderApi.Domain.Products;
 using OrderApi.Infra.Data;
 using OrderApi.Utils.ErrosEndpoint;
+using System.Security.Claims;
 
 namespace OrderApi.Entpoints.Categories
 {
@@ -11,21 +13,27 @@ namespace OrderApi.Entpoints.Categories
         public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
         public static Delegate Handle => Action;
 
+        //[AllowAnonymous] //-> para permitir que qualquer um acesse essa rota
+        [Authorize(Policy = "EmployeePolicy")] //-> para permitir que apenas usuarios logados(Authenticados) acessem essa rota
+            
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(CategoryRequest categoryRequest, ApplicationDbContext context)
+        public static IResult Action(CategoryRequest categoryRequest, HttpContext http ,ApplicationDbContext context)
         {
-         
-           /*
-            Tipo de validação que pode ser feita (validar o campo de um a um
-            if (string.IsNullOrEmpty(categoryRequest.Name))
-            {
-                return Results.BadRequest("Name is required");
-            }
-            */
+
+            /*
+             Tipo de validação que pode ser feita (validar o campo de um a um
+             if (string.IsNullOrEmpty(categoryRequest.Name))
+             {
+                 return Results.BadRequest("Name is required");
+             }
+             */
+
+            //Por causa da Policy aqui eu ja sei que o usuario esta autenticado !!
+            var userId = http.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value; //-> pegando o id do usuario logado
 
 
             //Ou podemos adicionar o package 'Flunt' para fazer a validação direto no objeto modelo Entity
-            var category = new Category(categoryRequest.Name, "test created", "test edited") //-> passando a validação pelo construtor
+            var category = new Category(categoryRequest.Name, userId, userId) //-> passando a validação pelo construtor (2x userId pq quem criou foi tambem quem editou)
             {
                 //Name = categoryRequest.Name, //-> eu removo daqui e coloco no construtor, isso serve para todos que esta no construtor    
             };

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using OrderApi.Utils.ErrosEndpoint;
 using System.Security.Claims;
 
@@ -10,27 +11,32 @@ namespace OrderApi.Endpoints.Employees
         public static string[] Methods => new string[] { HttpMethod.Post.ToString() };
         public static Delegate Handle => Action;
 
+        [Authorize(Policy = "EmployeePolicy")]
+
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(EmployeeRequest employeeRequest, UserManager<IdentityUser> userManage) //UserManager<IdentityUser> -> serviço que gerencia a criaçao do usuario no banco
+        public static IResult Action(EmployeeRequest employeeRequest, HttpContext http ,UserManager<IdentityUser> userManage) //UserManager<IdentityUser> -> serviço que gerencia a criaçao do usuario no banco
         {
 
-            var user = new IdentityUser
+            // Por causa da Policy aqui eu ja sei que o usuario esta autenticado !!
+            var userId = http.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value; //-> pegando o id do usuario logado
+            var newUser = new IdentityUser
             {
                 Email = employeeRequest.Email,
                 UserName = employeeRequest.Email
             };
 
-            var result = userManage.CreateAsync(user, employeeRequest.Password).Result;
+            var result = userManage.CreateAsync(newUser, employeeRequest.Password).Result;
 
             //Ao inves de adicionar direto no banco, eu posso adicionar um novo atributo ao meu usuario aqui com a Claim
             //"EmployeeCode" -> chave criado no EmployeeRequest
             var userClaims = new List<Claim>
             {
                 new Claim("EmployeeCode", employeeRequest.EmployeeCode),
-                new Claim("Name", employeeRequest.Name)
+                new Claim("Name", employeeRequest.Name),
+                new Claim("CreatedBy", userId)
             };
 
-            var claimResult = userManage.AddClaimsAsync(user, userClaims).Result;
+            var claimResult = userManage.AddClaimsAsync(newUser, userClaims).Result;
                      
 
             if (!claimResult.Succeeded)
@@ -39,7 +45,7 @@ namespace OrderApi.Endpoints.Employees
             }
 
             //retornando 201 e retornando o id do objeto criado
-            return Results.Created($"/api/v1/employees/{user.Id}", user.Id);
+            return Results.Created($"/api/v1/employees/{newUser.Id}", newUser.Id);
         }
     }
 }
