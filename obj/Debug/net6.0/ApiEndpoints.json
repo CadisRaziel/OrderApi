@@ -112,5 +112,27 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "OrderApi.Endpoints.Security.TokenPost",
+    "Method": "Action",
+    "RelativePath": "api/v1/token",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "LoginRequest",
+        "Type": "OrderApi.Endpoints.Security.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

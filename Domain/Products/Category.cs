@@ -32,10 +32,12 @@ namespace OrderApi.Domain.Products
             AddNotifications(contract);
         }
 
-        public void EditInfo(string name, bool active)
+        public void EditInfo(string name, bool active, string editedBy)
         {
             Name = name;
             Active = active;
+            EditedBy = editedBy; //-> vou ter toda vez o usuario que editou
+            EditedOn = DateTime.Now; //-> vou ter toda vez a data que foi editado
 
             //Olha que interessante ue tambem posso por um contrato de tratamento de excessão aqui.
             Validate();

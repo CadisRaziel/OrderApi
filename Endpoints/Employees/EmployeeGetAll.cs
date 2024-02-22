@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using OrderApi.Infra.Service;
@@ -11,6 +12,19 @@ namespace OrderApi.Endpoints.Employees
         public static string Template => "api/v1/employeesGetAll";
         public static string[] Methods => new string[] { HttpMethod.Get.ToString() };
         public static Delegate Handle => Action;
+
+        /*
+         Roles (Funções): Uma Role é uma maneira de agrupar usuários que têm permissões semelhantes dentro de um sistema. 
+         Por exemplo, você pode ter roles como "Admin", "Usuário", "Gerente", etc. Os usuários podem ser atribuídos a 
+         uma ou mais roles e, em seguida, as permissões associadas a essas roles são aplicadas aos usuários.
+
+         Policy (Política): Uma política é uma maneira mais flexível e poderosa de definir permissões e regras de autorização. 
+         Em vez de apenas agrupar usuários por funções predefinidas, as políticas permitem que você defina condições mais 
+         complexas para determinar se um usuário tem permissão para acessar um recurso ou executar uma ação. As políticas podem
+         ser baseadas em roles, mas também podem depender de outros fatores, como propriedades do usuário, contexto da solicitação, etc.
+         */
+        [Authorize(Policy = "EmployeePolicy")] 
+        //[Authorize(Policy = "Employee0050Policy")] //-> Aqui somente o usuario com EmployeeCode0050 tera acesso a essa rota
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
 
