@@ -108,9 +108,10 @@ namespace OrderApi.Endpoints.Employees
 
         #region
         //--------- CÒDIGO NOVO COM O DAPPER REFATORADO  ---------        
-        public static IResult Action(int? page, int? rows, QueryAllUsersWithClaimName query)
-        {     
-            return Results.Ok(query.Execute(page.Value, rows.Value)); //Value -> pois o page e rows Aqui sao nullable e na classe QueryAllUsersWithClaimName não são
+        public static async Task<IResult> Action(int? page, int? rows, QueryAllUsersWithClaimName query)
+        {
+            var result = await query.Execute(page.Value, rows.Value); //Value -> pois o page e rows Aqui sao nullable e na classe QueryAllUsersWithClaimName não são
+            return Results.Ok(result); 
         }
         //--------- CÒDIGO NOVO COM O DAPPER REFATORADO  ---------         
         #endregion
