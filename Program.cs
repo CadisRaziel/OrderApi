@@ -9,7 +9,10 @@ using OrderApi.Endpoints.Security;
 using OrderApi.Entpoints.Categories;
 using OrderApi.Infra.Data;
 using OrderApi.Infra.Service;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,24 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+//Configurando os loggers no banco de dados
+//context -> para saber o endereço do banco de dados
+//configuration -> para configurar o serilog com os WriteTo
+//Observação importante -> O serilog remove o log que o .net ja coloca por default e assume esse papel !! (os logs fica tipo os logs de nodejs)
+builder.WebHost.UseSerilog((context, configuration) => {
+    configuration
+        .WriteTo.Console()
+        .WriteTo.MSSqlServer(
+            context.Configuration["ConnectionStrings:OrderApiDb"],
+              //sinkOptions -> To dizendo pra ele criar a tabela automaticamente
+              sinkOptions: new MSSqlServerSinkOptions()
+              {
+                  AutoCreateSqlTable = true,
+                  TableName = "LogAPI"                 
+              });
+});
 
 
 //Conexão com banco de dados

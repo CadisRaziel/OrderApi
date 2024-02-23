@@ -16,8 +16,27 @@ namespace OrderApi.Endpoints.Security
         [AllowAnonymous] //-> para permitir que qualquer um acesse essa rota
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(LoginRequest loginRequest,IConfiguration configuration , UserManager<IdentityUser> userManage) 
+        public static IResult Action(LoginRequest loginRequest,IConfiguration configuration , UserManager<IdentityUser> userManage, ILogger<TokenPost> log)
+        //ILogger<TokenPost> -> O .Net ja tem um logger por default, para usarmos ele é só passar o ILogger<TokenPost> como parametro a tipagem dele é a classe que estamos usando
         {
+            log.LogInformation("Pegand o token"); //-> Ai basta a gente dizer o que queremos.
+            log.LogWarning("Warning");
+            log.LogError("Error");
+
+            /*
+             Informação importante sobre os logs..
+             No program.cs temos a configuração do log, onde podemos definir o nivel de log que queremos, por exemplo:
+            "Logging": {
+            "LogLevel": {
+              "Default": "Information",
+              "Microsoft.AspNetCore": "Warning"
+            }
+           },     
+            
+            Se eu trocar "Information" por "Error" ou "Warning" por exemplo, todos os logs que eu coloquei como "Information" não vão aparecer, pois o nivel de log foi definido como "Error" e com isso só os de Error vao aparecer.
+             "Information" -> ele mostra todos os logs independente se é error, warning, information
+             */
+
             var user = userManage.FindByEmailAsync(loginRequest.Email).Result;
             if(user == null)
             {
