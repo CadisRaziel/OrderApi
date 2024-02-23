@@ -14,7 +14,7 @@ namespace OrderApi.Endpoints.Employees
         [Authorize(Policy = "EmployeePolicy")]
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(EmployeeRequest employeeRequest, HttpContext http ,UserManager<IdentityUser> userManage) //UserManager<IdentityUser> -> serviço que gerencia a criaçao do usuario no banco
+        public static async Task<IResult> Action(EmployeeRequest employeeRequest, HttpContext http ,UserManager<IdentityUser> userManage) //UserManager<IdentityUser> -> serviço que gerencia a criaçao do usuario no banco
         {
 
             // Por causa da Policy aqui eu ja sei que o usuario esta autenticado !!
@@ -25,7 +25,12 @@ namespace OrderApi.Endpoints.Employees
                 UserName = employeeRequest.Email
             };
 
-            var result = userManage.CreateAsync(newUser, employeeRequest.Password).Result;
+            var result = await userManage.CreateAsync(newUser, employeeRequest.Password);
+
+            if (!result.Succeeded)
+            {
+                return Results.ValidationProblem(result.Errors.ConvertToProblemDetails());
+            }
 
             //Ao inves de adicionar direto no banco, eu posso adicionar um novo atributo ao meu usuario aqui com a Claim
             //"EmployeeCode" -> chave criado no EmployeeRequest
@@ -36,7 +41,7 @@ namespace OrderApi.Endpoints.Employees
                 new Claim("CreatedBy", userId)
             };
 
-            var claimResult = userManage.AddClaimsAsync(newUser, userClaims).Result;
+            var claimResult = await userManage.AddClaimsAsync(newUser, userClaims);
                      
 
             if (!claimResult.Succeeded)

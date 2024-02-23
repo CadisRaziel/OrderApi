@@ -17,7 +17,7 @@ namespace OrderApi.Entpoints.Categories
         [Authorize(Policy = "EmployeePolicy")] //-> para permitir que apenas usuarios logados(Authenticados) acessem essa rota
             
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(CategoryRequest categoryRequest, HttpContext http ,ApplicationDbContext context)
+        public static async Task<IResult> Action(CategoryRequest categoryRequest, HttpContext http ,ApplicationDbContext context)
         {
 
             /*
@@ -44,8 +44,8 @@ namespace OrderApi.Entpoints.Categories
                 return Results.ValidationProblem(category.Notifications.ConvertToProblemDetails());
             }
 
-            context.Categories.Add(category);
-            context.SaveChanges();
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
 
             //retornando 201 e retornando o id do objeto criado
             return Results.Created($"/api/v1/categories/{category.Id}", category.Id);
