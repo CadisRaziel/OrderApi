@@ -31,6 +31,8 @@ namespace OrderApi.Infra.Data
             //Abaixo colocamos todas as strings como 100 caracteres porém aqui eu digo(respeite esses valores acima da função debaixo), ou seja essa função tem mais prioridade
             modelBuilder.Entity<Product>().Property(p => p.Name).IsRequired();
             modelBuilder.Entity<Product>().Property(p => p.Description).HasMaxLength(255);  
+            modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(10,2)").IsRequired(); //-> 10 digitos antes da virgula e 2 casas decimais depois da virgula
+            //Detalhe do Price e da coluna decimal, a partir do momento que eu crio uma coluna "Obrigatoria(isRequired)" antes de fazer migration eu preciso deletar tudo que tem nessa tabela de product
             
 
             modelBuilder.Ignore<Notification>(); //-> Ignorando a classe de notificação do flunt para parar de dar erro de chave primaria

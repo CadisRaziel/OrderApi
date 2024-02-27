@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using OrderApi.Endpoints.Employees;
+using OrderApi.Endpoints.Products;
 using OrderApi.Endpoints.Security;
 using OrderApi.Entpoints.Categories;
 using OrderApi.Infra.Data;
@@ -12,6 +13,7 @@ using OrderApi.Infra.Service;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Text;
+using System.Text.Json;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -167,30 +169,29 @@ app.MapMethods(CategoryPut.Template, CategoryPut.Methods, CategoryPut.Handle);
 app.MapMethods(EmployeePost.Template, EmployeePost.Methods, EmployeePost.Handle);
 app.MapMethods(EmployeeGetAll.Template, EmployeeGetAll.Methods, EmployeeGetAll.Handle);
 app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
+app.MapMethods(ProductPost.Template, ProductPost.Methods, ProductPost.Handle);
+app.MapMethods(ProductGetAll.Template, ProductGetAll.Methods, ProductGetAll.Handle);
 
 //Configurando a execção (nosso manipulador de exceção é chamado colocando esse código)
 ///error -> rota que iremos criar para aprensentar o erro do tipo ExecptionHandler
 app.UseExceptionHandler("/error");
 
 //Podemos criar a rota direto aqui (podemos tratar varias coisas aqui)
-app.Map("/error", (HttpContext http) =>
-{
-    var error = http.Features?.Get<IExceptionHandlerFeature>()?.Error; //-> Aqui nos pegamos o tipo de erro que aconteceu
+app.Map("/error", (HttpContext http) => {
+
+    var error = http.Features?.Get<IExceptionHandlerFeature>()?.Error;
 
     if (error != null)
     {
-        if(error is SecurityTokenExpiredException)
-        {
-            return Results.Problem("Token expirado", statusCode: 401);
-        }
-        
-        if(error is SqlException)
-        {
-            return Results.Problem("Database está fora", statusCode: 401);
-        }
+        if (error is SqlException)
+            return Results.Problem(title: "Database out", statusCode: 500);
+        else if (error is BadHttpRequestException)
+            return Results.Problem(title: "Error to convert data to other type. See all the information sent", statusCode: 500);
+        else if (error is NullReferenceException)
+            return Results.Problem(title: "Error no json convert", statusCode: 500);
     }
 
-    return Results.Problem("Ocorreu um erro", statusCode: 500);
+    return Results.Problem(title: "An error ocurred", statusCode: 500);
 });
 
 // Configure the HTTP request pipeline.
