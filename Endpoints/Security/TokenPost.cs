@@ -16,7 +16,7 @@ namespace OrderApi.Endpoints.Security
         [AllowAnonymous] //-> para permitir que qualquer um acesse essa rota
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static IResult Action(LoginRequest loginRequest,IConfiguration configuration , UserManager<IdentityUser> userManage, ILogger<TokenPost> log)
+        public static async Task<IResult> Action(LoginRequest loginRequest,IConfiguration configuration , UserManager<IdentityUser> userManage, ILogger<TokenPost> log)
         //ILogger<TokenPost> -> O .Net ja tem um logger por default, para usarmos ele é só passar o ILogger<TokenPost> como parametro a tipagem dele é a classe que estamos usando
         {
             log.LogInformation("Pegand o token"); //-> Ai basta a gente dizer o que queremos.
@@ -37,18 +37,18 @@ namespace OrderApi.Endpoints.Security
              "Information" -> ele mostra todos os logs independente se é error, warning, information
              */
 
-            var user = userManage.FindByEmailAsync(loginRequest.Email).Result;
+            var user = await userManage.FindByEmailAsync(loginRequest.Email);
             if(user == null)
             {
                 return Results.Unauthorized();
             }   
 
-            if(!userManage.CheckPasswordAsync(user, loginRequest.Password).Result)
+            if(!await userManage.CheckPasswordAsync(user, loginRequest.Password))
             {
                 return Results.Unauthorized();
             }
 
-            var claims = userManage.GetClaimsAsync(user).Result;
+            var claims = await userManage.GetClaimsAsync(user);
             var subject = new ClaimsIdentity(new Claim[] //-> arrays de claim
                 {
                     new Claim(ClaimTypes.Email, loginRequest.Email), //-> quem for obter esse token pode ler o email que esta dentro do token                

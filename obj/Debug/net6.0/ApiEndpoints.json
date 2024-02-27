@@ -87,6 +87,44 @@
     ]
   },
   {
+    "ContainingType": "OrderApi.Endpoints.Products.ProductGetAll",
+    "Method": "Action",
+    "RelativePath": "api/v1/getProducts",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OrderApi.Endpoints.Products.ProductPost",
+    "Method": "Action",
+    "RelativePath": "api/v1/product",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ProductRequest",
+        "Type": "OrderApi.Endpoints.Products.ProductRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "OrderApi.Entpoints.Categories.CategoryPut",
     "Method": "Action",
     "RelativePath": "api/v1/PutCategories/{id:guid}",
