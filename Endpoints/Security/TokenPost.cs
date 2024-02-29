@@ -16,8 +16,12 @@ namespace OrderApi.Endpoints.Security
         [AllowAnonymous] //-> para permitir que qualquer um acesse essa rota
 
         //IResult -> para dizer se deu 200 - 201 - 400 - 404 ... etc
-        public static async Task<IResult> Action(LoginRequest loginRequest,IConfiguration configuration , UserManager<IdentityUser> userManage, ILogger<TokenPost> log)
-        //ILogger<TokenPost> -> O .Net ja tem um logger por default, para usarmos ele é só passar o ILogger<TokenPost> como parametro a tipagem dele é a classe que estamos usando
+        public static async Task<IResult> Action
+            (LoginRequest loginRequest,
+            IConfiguration configuration ,
+            UserManager<IdentityUser> userManage,
+            ILogger<TokenPost> log, //ILogger<TokenPost> -> O .Net ja tem um logger por default, para usarmos ele é só passar o ILogger<TokenPost> como parametro a tipagem dele é a classe que estamos usando
+            IWebHostEnvironment environment) //IWebHostEnvironment -> para pegar o ambiente(stage ou prod) que estamos rodando
         {
             log.LogInformation("Pegand o token"); //-> Ai basta a gente dizer o que queremos.
             log.LogWarning("Warning");
@@ -74,7 +78,7 @@ namespace OrderApi.Endpoints.Security
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature), 
                 Audience = configuration["JwtBearerTokenSettings:Audience"], //-> Este parâmetro define para quem o token é destinado ou quem pode usar o token(quem utilizar esse banco)
                 Issuer = configuration["JwtBearerTokenSettings:Issuer"], //-> Este parâmetro define quem está assinando (emitindo) o token
-                Expires = DateTime.UtcNow.AddHours(1), //-> tempo de expiração do token. Por exemplo, se a aplicação está emitindo tokens de autenticação e identificação para o sistema, então o valor do Issuer pode ser definido como "Issuer".
+                Expires = environment.IsDevelopment() || environment.IsStaging() ? DateTime.UtcNow.AddYears(1) : DateTime.UtcNow.AddHours(1), //-> tanto para desenvolvimento ou staging é 1 ano, se nao for nenhum dos dois ele vai saber que é de produção e vai ser 1 hora
             };
 
             var tokenHandler = new JwtSecurityTokenHandler(); //-> gera o manipulador do token
