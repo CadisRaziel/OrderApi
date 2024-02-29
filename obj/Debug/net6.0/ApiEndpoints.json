@@ -22,6 +22,44 @@
     ]
   },
   {
+    "ContainingType": "OrderApi.Endpoints.Clients.ClientsPost",
+    "Method": "Action",
+    "RelativePath": "api/v1/client",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ClientsRequest",
+        "Type": "OrderApi.Endpoints.Clients.ClientsRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OrderApi.Endpoints.Clients.ClientGet",
+    "Method": "Action",
+    "RelativePath": "api/v1/clientGet",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "OrderApi.Endpoints.Employees.EmployeePost",
     "Method": "Action",
     "RelativePath": "api/v1/employees",
