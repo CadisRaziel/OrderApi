@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
+using OrderApi.Endpoints.Clients;
 using OrderApi.Endpoints.Employees;
 using OrderApi.Endpoints.Products;
 using OrderApi.Endpoints.Security;
 using OrderApi.Entpoints.Categories;
 using OrderApi.Infra.Data;
 using OrderApi.Infra.Service;
+using OrderApi.Services.Users;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Text;
@@ -149,9 +151,10 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-//Injetando dependencia
+//Informando ao .net sobre nossas classes de serviço (injetor de dependencia, services ...)
 //AddScoped -> quando a classe precisar ser instanciada em um metodo, e em quando dura a nossa requisição essa instancia estara na memoria, quando a requisição acabar ela é destruida
 builder.Services.AddScoped<QueryAllUsersWithClaimName>();
+builder.Services.AddScoped<UserCreator>(); //-> Classe de serviço tambem precisa ser declarada aqui !!
 
 
 var app = builder.Build();
@@ -172,6 +175,8 @@ app.MapMethods(TokenPost.Template, TokenPost.Methods, TokenPost.Handle);
 app.MapMethods(ProductPost.Template, ProductPost.Methods, ProductPost.Handle);
 app.MapMethods(ProductGetAll.Template, ProductGetAll.Methods, ProductGetAll.Handle);
 app.MapMethods(ProductGetShowCase.Template, ProductGetShowCase.Methods, ProductGetShowCase.Handle);
+app.MapMethods(ClientsPost.Template, ClientsPost.Methods, ClientsPost.Handle);
+app.MapMethods(ClientGet.Template, ClientGet.Methods, ClientGet.Handle);
 
 //Configurando a execção (nosso manipulador de exceção é chamado colocando esse código)
 ///error -> rota que iremos criar para aprensentar o erro do tipo ExecptionHandler
