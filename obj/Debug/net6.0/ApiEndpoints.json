@@ -125,6 +125,38 @@
     ]
   },
   {
+    "ContainingType": "OrderApi.Endpoints.Products.ProductGetShowCase",
+    "Method": "Action",
+    "RelativePath": "api/v1/product/showcase",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "row",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "orderBy",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "OrderApi.Entpoints.Categories.CategoryPut",
     "Method": "Action",
     "RelativePath": "api/v1/PutCategories/{id:guid}",
