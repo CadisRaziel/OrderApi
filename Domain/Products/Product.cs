@@ -1,4 +1,5 @@
 ﻿using Flunt.Validations;
+using OrderApi.Domain.Orders;
 using System.Diagnostics.Contracts;
 
 namespace OrderApi.Domain.Products
@@ -12,6 +13,7 @@ namespace OrderApi.Domain.Products
         public bool HasStock { get; private set; }
         public bool Active { get; private set; } = true;
         public decimal Price { get; private set; }
+        public ICollection<Order> Orders { get; private set; } //ICollection -> significa que a propriedade pode armazenar uma coleção de objetos do tipo Order.
 
         private Product() { } //-> Lembre-se sempre de criar um construtor vazio(se nao vai dar erro em ouros endpoints)
 

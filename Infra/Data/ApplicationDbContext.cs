@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OrderApi.Domain.Orders;
 using OrderApi.Domain.Products;
 
 namespace OrderApi.Infra.Data
@@ -20,6 +21,7 @@ namespace OrderApi.Infra.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -36,6 +38,17 @@ namespace OrderApi.Infra.Data
             
 
             modelBuilder.Ignore<Notification>(); //-> Ignorando a classe de notificação do flunt para parar de dar erro de chave primaria
+
+            modelBuilder.Entity<Order>().Property(o => o.ClientId).IsRequired();
+            modelBuilder.Entity<Order>().Property(o => o.DeliveryAddress).IsRequired();
+
+            //Relacionamento de pedido com produto
+            //HasMany -> muitos produtos para um pedido (um produto vai ta em muitos pedidos e um pedido vai ter muitos produtos)
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Products)
+                .WithMany(p => p.Orders) //-> muitos para muitos
+                .UsingEntity(x => x.ToTable("OrderProducts")); //-> nome da tabela que vai ser criada no banco de dados (de muitos pra muitos)                     
+                //.WithOne() -> um para um
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
