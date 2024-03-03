@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using OrderApi.Endpoints.Clients;
 using OrderApi.Endpoints.Employees;
+using OrderApi.Endpoints.Orders;
 using OrderApi.Endpoints.Products;
 using OrderApi.Endpoints.Security;
 using OrderApi.Entpoints.Categories;
@@ -125,6 +126,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Employee0050Policy", p =>
         p.RequireAuthenticatedUser()
         .RequireClaim("EmployeeCode", "0050"));// -> Alem do claim ele tem que ter o código(valor) 0050
+
+    //policy que obriga o usuario ter cpf
+    options.AddPolicy("CpfPolicy", p =>
+       p.RequireAuthenticatedUser()
+       .RequireClaim("Cpf"));
 });
 
 //Informando ao .Net a forma que ele vai se autenticar (2º passo para habilitar a autorização) (serviço disponivel pro app usar)
@@ -177,6 +183,7 @@ app.MapMethods(ProductGetAll.Template, ProductGetAll.Methods, ProductGetAll.Hand
 app.MapMethods(ProductGetShowCase.Template, ProductGetShowCase.Methods, ProductGetShowCase.Handle);
 app.MapMethods(ClientsPost.Template, ClientsPost.Methods, ClientsPost.Handle);
 app.MapMethods(ClientGet.Template, ClientGet.Methods, ClientGet.Handle);
+app.MapMethods(OrderPost.Template, OrderPost.Methods, OrderPost.Handle);
 
 //Configurando a execção (nosso manipulador de exceção é chamado colocando esse código)
 ///error -> rota que iremos criar para aprensentar o erro do tipo ExecptionHandler
