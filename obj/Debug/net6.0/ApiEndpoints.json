@@ -141,6 +141,28 @@
     ]
   },
   {
+    "ContainingType": "OrderApi.Endpoints.Orders.OrderPost",
+    "Method": "Action",
+    "RelativePath": "api/v1/order",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "OrderRequest",
+        "Type": "OrderApi.Endpoints.Orders.OrderRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "OrderApi.Endpoints.Products.ProductPost",
     "Method": "Action",
     "RelativePath": "api/v1/product",
